@@ -6,7 +6,7 @@ server/assets/
 .idea
 /pgrok*
 /pgrokd*
-/pgrok.exe
-/pgrokd.exe
+#/pgrok.exe
+#/pgrokd.exe
 /build
 /dist

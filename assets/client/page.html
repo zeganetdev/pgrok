@@ -32,6 +32,11 @@
               word-break: break-word;
               overflow: hidden;
             }
+            .container {
+                margin-right: 10px !important;
+                margin-left: 10px !important;
+                width: 100% !important;
+            }
         </style>
     </head>
 
@@ -64,11 +69,18 @@
                     </div>
                 </div>
             </div>
-            <div ng-show="txns.length>0" class="row">
-                <div class="span6">
+            <div ng-show="txns.length>0" class="row-fluid">
+                <div ng-controller="TxnNavItem" class="span6">
+                    <form class="form-search">
+                        <div class="input-prepend">
+                          <button type="submit" class="btn">Filtrar</button>
+                          <input type="text" class="span12 search-query" ng-model="searchText">
+                        </div>
+                    </form>
                     <h4>All Requests</h4>
                     <table class="table txn-selector">
-                        <tr ng-controller="TxnNavItem" ng-class="{'selected':isActive()}" ng-repeat="txn in txns" ng-click="makeActive()">
+                        <tr ng-class="{'selected':isActive(txn.Id)}" ng-repeat="txn in txns | filter:searchText" ng-click="makeActive(txn)">
+                            <td class="wrapped">{{ TimeFormat(txn.Start) }}</td>
                             <td class="wrapped"><div class="path">{{ txn.Req.MethodPath }}</div></td>
                             <td>{{ txn.Resp.Status }}</td>
                             <td><span class="pull-right">{{ txn.Duration }}</span></td>

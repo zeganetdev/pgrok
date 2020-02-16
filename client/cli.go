@@ -22,7 +22,7 @@ Examples:
 Advanced usage: pgrok [OPTIONS] <command> [command args] [...]
 Commands:
 	pgrok start [tunnel] [...]    Start tunnels by name from config file
-	ngork start-all               Start all tunnels defined in config file
+	pgrok start-all               Start all tunnels defined in config file
 	pgrok list                    List tunnel names from config file
 	pgrok help                    Print help
 	pgrok version                 Print pgrok version

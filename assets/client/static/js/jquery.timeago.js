@@ -34,6 +34,7 @@
       return inWords($.timeago.datetime(timestamp));
     }
   };
+
   var $t = $.timeago;
 
   $.extend($.timeago, {
@@ -62,7 +63,16 @@
         numbers: []
       }
     },
+
     inWords: function(distanceMillis) {
+      function inWordsShort(distanceMillis) {
+        /*var _horas = (Math.floor( (distanceMillis / 1000) / 3600 )).toString().padStart(2, "00");*/
+        var _minutos = (Math.floor( ((distanceMillis / 1000) % 3600) / 60 )).toString().padStart(2, "00");
+        var _segundos = (Math.floor((distanceMillis / 1000) % 60)).toString().padStart(2, "00");
+        return /*_horas + ":" + */_minutos + ":" + _segundos;
+      }
+      return inWordsShort(distanceMillis);
+/*
       var $l = this.settings.strings;
       var prefix = $l.prefixAgo;
       var suffix = $l.suffixAgo;
@@ -99,7 +109,7 @@
 
       var separator = $l.wordSeparator || "";
       if ($l.wordSeparator === undefined) { separator = " "; }
-      return $.trim([prefix, words, suffix].join(separator));
+      return $.trim([prefix, words, suffix].join(separator));*/
     },
     parse: function(iso8601) {
       var s = $.trim(iso8601);

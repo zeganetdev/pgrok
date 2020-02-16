@@ -140,6 +140,9 @@ pgrok.factory("txnSvc", function() {
         } else {
             txn.Duration = toFixed(ms, 2) + "ms";
         }
+
+
+
     };
 
 
@@ -179,8 +182,8 @@ pgrok.factory("txnSvc", function() {
                 activate(txn);
             }
         },
-        isActive: function(txn) {
-            return !!active && txn.Id == active.Id;
+        isActive: function(_id) {
+            return !!active && _id == active.Id;
         }
     };
 });
@@ -361,10 +364,24 @@ pgrok.controller({
     },
 
     "TxnNavItem": function($scope, txnSvc) {
-        $scope.isActive = function() { return txnSvc.isActive($scope.txn); }
-        $scope.makeActive = function() {
-            txnSvc.active($scope.txn);
+        $scope.isActive = function(_id) { return txnSvc.isActive(_id); }
+        $scope.makeActive = function(_txn) {
+            txnSvc.active(_txn);
         };
+
+        $scope.ISO8601 = function(ts) {
+            if (!!ts) {
+                return new Date(ts * 1000).toISOString();
+            }
+        };
+
+        $scope.TimeFormat = function(ts) {
+            if (!!ts) {
+                return $.timeago($scope.ISO8601(ts));
+            }
+        };
+
+
     },
 
     "HttpTxn": function($scope, txnSvc, $timeout) {
