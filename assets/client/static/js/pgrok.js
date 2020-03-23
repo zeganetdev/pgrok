@@ -97,7 +97,12 @@ pgrok.factory("txnSvc", function() {
                 req.RawText = decoded.text;
             }
         }
-
+        var b = req.MethodPath.split("/");
+        for (i in b) {
+            if (b[i].length >= 60){ b[i]="{{base64}}"; }
+        }
+        var c = b.toString();
+        req.NewMethodPath = c.replace(/,/gi, "/");
         processBody(req.Body, req.Binary);
     };
 
@@ -141,6 +146,13 @@ pgrok.factory("txnSvc", function() {
             txn.Duration = toFixed(ms, 2) + "ms";
         }
 
+
+        var b = txn.Req.MethodPath.split("/");
+        for (i in b) {
+            if (b[i].length >= 60){ b[i]="{{base64}}"; }
+        }
+        var c = b.toString();
+        txn.Req.NewMethodPath = c.replace(/,/gi, "/");
 
 
     };
@@ -310,7 +322,8 @@ pgrok.controller({
         $scope.txns = txnSvc.all();
 
         if (!!window.WebSocket) {
-            var ws = new WebSocket("ws://" + location.host + "/_ws");
+            //var ws = new WebSocket("ws://" + location.host + "/_ws");
+            var ws = new WebSocket("ws://192.168.4.106:4040/_ws");
             ws.onopen = function() {
                 console.log("connected websocket for real-time updates");
             };

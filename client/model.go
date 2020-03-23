@@ -22,8 +22,10 @@ import (
 )
 
 const (
-	defaultServerAddr   = "ejemplo.me:4443"
-	defaultInspectAddr  = "127.0.0.1:4040"
+	defaultServerAddr = "ejemplo.me:4443"
+	//defaultInspectAddr  = "127.0.0.1:4040"
+	//TODO:
+	defaultInspectAddr  = "192.168.4.106:4040"
 	pingInterval        = 20 * time.Second
 	maxPongLatency      = 15 * time.Second
 	updateCheckInterval = 6 * time.Hour
@@ -177,7 +179,9 @@ func (c *ClientModel) PlayRequest(tunnel mvc.Tunnel, payload []byte) {
 	}
 
 	defer localConn.Close()
-	localConn = tunnel.Protocol.WrapConn(localConn, mvc.ConnectionContext{Tunnel: tunnel, ClientAddr: "127.0.0.1"})
+	//localConn = tunnel.Protocol.WrapConn(localConn, mvc.ConnectionContext{Tunnel: tunnel, ClientAddr: "127.0.0.1"})
+	//TODO:
+	localConn = tunnel.Protocol.WrapConn(localConn, mvc.ConnectionContext{Tunnel: tunnel, ClientAddr: "192.168.4.106"})
 	localConn.Write(payload)
 	ioutil.ReadAll(localConn)
 }

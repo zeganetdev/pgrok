@@ -18,7 +18,7 @@ fmt:
 	go fmt ./...
 
 client: deps
-	go build -o pgrok ./cmd/pgrok
+	go build -o pgrok.exe ./cmd/pgrok
 
 assets: client-assets server-assets
 
@@ -26,14 +26,10 @@ go-bindata:
 	go get github.com/jteeuwen/go-bindata/go-bindata
 
 client-assets: go-bindata
-	go-bindata -nomemcopy -pkg=assets -tags=$(BUILDTAGS) \
-		-o=client/assets/all.go \
-		assets/client/...
+	go-bindata -nomemcopy -pkg=assets -tags=$(BUILDTAGS) -o="client/assets/all.go" assets/client/...
 
 server-assets: go-bindata
-	go-bindata -nomemcopy -pkg=assets -tags=$(BUILDTAGS) \
-		-o=server/assets/all.go \
-		assets/server/...
+	go-bindata -nomemcopy -pkg=assets -tags=$(BUILDTAGS) -o="server/assets/all.go" assets/server/...
 
 build: assets client server
 

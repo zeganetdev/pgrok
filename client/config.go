@@ -2,8 +2,6 @@ package client
 
 import (
 	"fmt"
-	"github.com/phayes/freeport"
-	"gopkg.in/yaml.v1"
 	"io/ioutil"
 	"net"
 	"net/url"
@@ -14,6 +12,9 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+
+	"github.com/phayes/freeport"
+	"gopkg.in/yaml.v1"
 )
 
 type Configuration struct {
@@ -272,7 +273,9 @@ func normalizeAddress(addr string, propName string) (string, error) {
 	}
 
 	if host == "" {
-		host = "127.0.0.1"
+		//host = "127.0.0.1"
+		//TODO:
+		host = "192.168.4.106"
 	}
 
 	return fmt.Sprintf("%s:%s", host, port), nil

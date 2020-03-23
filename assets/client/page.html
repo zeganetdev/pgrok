@@ -57,7 +57,7 @@
                 </div>
             </div>
             <div ng-show="txns.length==0" class="row">
-                <div class="span6 offset3">
+                <div class="span12 offset3">
                     <div class="well" style="padding: 20px 50px;">
                         <h4>No requests to display yet</h4>
 			<hr />
@@ -77,77 +77,79 @@
                           <input type="text" class="span12 search-query" ng-model="searchText">
                         </div>
                     </form>
-                    <h4>All Requests</h4>
-                    <table class="table txn-selector">
-                        <tr ng-class="{'selected':isActive(txn.Id)}" ng-repeat="txn in txns | filter:searchText" ng-click="makeActive(txn)">
-                            <td class="wrapped">{{ TimeFormat(txn.Start) }}</td>
-                            <td class="wrapped"><div class="path">{{ txn.Req.MethodPath }}</div></td>
-                            <td>{{ txn.Resp.Status }}</td>
-                            <td><span class="pull-right">{{ txn.Duration }}</span></td>
-                        </tr>
-                    </table>
+                    <div style="max-height: 90%; overflow: auto;">
+                        <h4>All Requests</h4>
+                        <table class="table txn-selector">
+                            <tr ng-class="{'selected':isActive(txn.Id)}" ng-repeat="txn in txns | filter:searchText" ng-click="makeActive(txn)">
+                                <td class="wrapped" style="width: 42px;">{{ TimeFormat(txn.Start) }}</td>
+                                <td class="wrapped"><div class="path">{{ txn.Req.NewMethodPath }}</div></td>
+                                <td>{{ txn.Resp.Status }}</td>
+                                <td><span class="pull-right">{{ txn.Duration }}</span></td>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
-                <div class="span6" ng-controller="HttpTxn" ng-show="!!Txn">
-                    <div class="row-fluid">
-                        <div class="span4">
-                            <span title="{{ISO8601(Txn.Start)}}" class="muted">
-                                {{TimeFormat(Txn.Start)}}
-                            </span>
+                <div style="position: fixed;max-height: 90%;display: inline-block;overflow: auto;">
+                    <div class="span" ng-controller="HttpTxn" ng-show="!!Txn">
+                        <div class="row-fluid">
+                            <div class="span4">
+                                <span title="{{ISO8601(Txn.Start)}}" class="muted">
+                                    {{TimeFormat(Txn.Start)}}
+                                </span>
+                            </div>
+                            <div class="span4">
+                                <i class="icon-time"></i> Duration
+                                <span style="margin-left: 8px;" class="muted">{{Txn.Duration}}</span>
+                            </div>
+                            <div  class="span4">
+                                <i class="icon-user"></i> IP
+                                <span style="margin-left: 8px;" class="muted">{{Txn.ConnCtx.ClientAddr.split(":")[0]}}</span>
+                            </div>
                         </div>
-                        <div class="span4">
-                            <i class="icon-time"></i> Duration
-                            <span style="margin-left: 8px;" class="muted">{{Txn.Duration}}</span>
+                        <hr />
+                        <div ng-show="!!Req" ng-controller="HttpRequest">
+                            <h3 class="wrapped">{{ Req.MethodPath }}</h3>
+                            <div onbtnclick="replay()" btn="Replay" tabs="Summary,Headers,Raw,Binary">
+                            </div>
+
+                            <div ng-show="isTab('Summary')">
+                                <keyval title="Query Params" tuples="Req.Params"></keyval>
+                                <div body="Req.Body" binary="Req.Binary"></div>
+                            </div>
+
+                            <div ng-show="isTab('Headers')">
+                                <keyval title="Headers" tuples="Req.Header"></keyval>
+                            </div>
+
+                            <div ng-show="isTab('Raw')">
+                                <pre><code class="http">{{ Req.RawText }}</code></pre>
+                            </div>
+
+                            <div ng-show="isTab('Binary')">
+                                <pre><code>{{ Req.RawBytes }}</code></pre>
+                            </div>
+
                         </div>
-                        <div  class="span4">
-                            <i class="icon-user"></i> IP
-                            <span style="margin-left: 8px;" class="muted">{{Txn.ConnCtx.ClientAddr.split(":")[0]}}</span>
-                        </div>
-                    </div>
-                    <hr />
-                    <div ng-show="!!Req" ng-controller="HttpRequest">
-                        <h3 class="wrapped">{{ Req.MethodPath }}</h3>
-                        <div onbtnclick="replay()" btn="Replay" tabs="Summary,Headers,Raw,Binary">
-                        </div>
+                        <hr style="margin: 40px 0 20px" />
+                        <div ng-show="!!Resp" ng-controller="HttpResponse">
+                            <h3 ng-class="Resp.statusClass">{{ Resp.Status }}</h3>
 
-                        <div ng-show="isTab('Summary')">
-                            <keyval title="Query Params" tuples="Req.Params"></keyval>
-                            <div body="Req.Body" binary="Req.Binary"></div>
-                        </div>
+                            <div tabs="Summary,Headers,Raw,Binary"></div>
+                            <div ng-show="isTab('Summary')">
+                                <div body="Resp.Body" binary="Resp.Binary"></div>
+                            </div>
 
-                        <div ng-show="isTab('Headers')">
-                            <keyval title="Headers" tuples="Req.Header"></keyval>
-                        </div>
+                            <div ng-show="isTab('Headers')">
+                                <keyval title="Headers" tuples="Resp.Header"></keyval>
+                            </div>
 
-                        <div ng-show="isTab('Raw')">
-                            <pre><code class="http">{{ Req.RawText }}</code></pre>
-                        </div>
+                            <div ng-show="isTab('Raw')">
+                                <pre><code class="http">{{ Resp.RawText }}</code></pre>
+                            </div>
 
-                        <div ng-show="isTab('Binary')">
-                            <pre><code>{{ Req.RawBytes }}</code></pre>
-                        </div>
-
-                    </div>
-
-                    <hr style="margin: 40px 0 20px" />
-
-                    <div ng-show="!!Resp" ng-controller="HttpResponse">
-                        <h3 ng-class="Resp.statusClass">{{ Resp.Status }}</h3>
-
-                        <div tabs="Summary,Headers,Raw,Binary"></div>
-                        <div ng-show="isTab('Summary')">
-                            <div body="Resp.Body" binary="Resp.Binary"></div>
-                        </div>
-
-                        <div ng-show="isTab('Headers')">
-                            <keyval title="Headers" tuples="Resp.Header"></keyval>
-                        </div>
-
-                        <div ng-show="isTab('Raw')">
-                            <pre><code class="http">{{ Resp.RawText }}</code></pre>
-                        </div>
-
-                        <div ng-show="isTab('Binary')">
-                            <pre><code>{{ Resp.RawBytes }}</code></pre>
+                            <div ng-show="isTab('Binary')">
+                                <pre><code>{{ Resp.RawBytes }}</code></pre>
+                            </div>
                         </div>
                     </div>
                 </div>
